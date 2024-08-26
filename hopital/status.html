@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connection status</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css" media="screen">
+    <style>
+        textarea, input, select {
+            background-color: #FDFBFB;
+            border: 1px solid #BBBBBB;
+            padding: 2px;
+            margin: 1px;
+            font-size: 14px;
+            color: #808080;
+        }
+
+        .tabula {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            border: 1px solid #c1c1c1;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .tabula th, .tabula td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tabula th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .tabula tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .tabula tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .container table {
+            width: 100%;
+            max-width: 800px; /* Limite la largeur du tableau pour qu'il ne prenne pas toute la largeur de la page */
+            border: 1px solid #c1c1c1;
+            border-radius: 10px;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #head {
+            transform: scaleX(1.1);
+        }
+
+        * {
+            color: #7e7e7e;
+        }
+
+        .slideshow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            animation: slide 10s infinite;
+            z-index: -1;
+            filter: blur(5px);
+        }
+
+        @keyframes slide {
+            0% { background-image: url('1.jpeg'); }
+            20% { background-image: url('2.jpeg'); }
+            40% { background-image: url('3.jpeg'); }
+            60% { background-image: url('4.jpeg'); }
+            80% { background-image: url('5.jpeg'); }
+            100% { background-image: url('6.jpeg'); }
+        }
+    </style>
+    <script>
+        function focusAdvert() {
+            if (window.popup && window.popup.focus) window.popup.focus();
+        }
+
+        function openAdvert() {
+            if ('$(advert-pending)' === 'yes') {
+                window.popup = window.open('$(link-advert)', 'hotspot_advert', '');
+                setTimeout(focusAdvert, 1000);
+            }
+        }
+
+        function openLogout() {
+            if (window.name !== 'hotspot_status') return true;
+            window.open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
+            window.close();
+            return false;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if ('$(advert-pending)' === 'yes') {
+                openAdvert();
+            }
+
+            var refreshTimeout = '$(refresh-timeout)';
+            if (refreshTimeout) {
+                var meta = document.createElement('meta');
+                meta.httpEquiv = 'refresh';
+                meta.content = refreshTimeout;
+                document.head.appendChild(meta);
+            }
+        });
+    </script>
+</head>
+<body bottommargin="0" topmargin="0" leftmargin="0" rightmargin="0">
+    <div class="slideshow"></div>
+    <div class="container">
+        <table>
+            <tr>
+                <td align="center" valign="middle">
+                    <div id="head"></div>
+                    <div id="box">
+                        <form action="$(link-logout)" name="logout" onsubmit="return openLogout()">
+                            <table class="tabula">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" style="text-align: center;">
+                                            <script>
+                                                var loginBy = '$(login-by)';
+                                                var username = '$(username)';
+                                                if (loginBy === 'trial') {
+                                                    document.write('Woezon trial user!');
+                                                } else if (loginBy !== 'mac') {
+                                                    document.write('Woezon ' + username + '!');
+                                                }
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr><td align="right">IP address:</td><td>$(ip)</td></tr>
+                                    <tr><td align="right">bytes up/down:</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
+                                    <tr>
+                                        <td align="right">connected / left:</td>
+                                        <td>
+                                            <script>
+                                                var sessionTimeLeft = '$(session-time-left)';
+                                                var uptime = '$(uptime)';
+                                                if (sessionTimeLeft) {
+                                                    document.write(uptime + ' / ' + sessionTimeLeft);
+                                                } else {
+                                                    document.write(uptime);
+                                                }
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">status:</td>
+                                        <td>
+                                            <script>
+                                                var blocked = '$(blocked)';
+                                                var refreshTimeout = '$(refresh-timeout)';
+                                                if (blocked === 'yes') {
+                                                    document.write('<div style="color: #FF8080"><a href="$(link-advert)" target="hotspot_advert">advertisement</a> required</div>');
+                                                } else if (refreshTimeout) {
+                                                    document.write('status refresh: ' + refreshTimeout);
+                                                }
+                                            </script>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <script>
+                                var loginByMac = '$(login-by-mac)';
+                                if (loginByMac !== 'yes') {
+                                    document.write('<br><input id="boton" type="submit" value="DECONNECTER" title="Log out">');
+                                }
+                            </script>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>In-Tel Services</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="md5.js"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <marquee behavior="scroll" direction="left" style="color: grey;">
+                <i>Bienvenue sur la page de connexion de l'hôpital!</i>
+            </marquee>
+            <div class="logo-container">
+                <img src="logo.jpeg" alt="Logo de l'Hôpital" class="logo">
+            </div>
+            <h2>Bienvenue!</h2>
+            <form id="loginForm" action="link-login-only" method="post" onsubmit="return doLogin()">
+                <input type="hidden" name="dst" value="link-orig" />
+                <input type="hidden" name="popup" value="true" />
+                <div class="input-group">
+                    <input type="text" id="username" name="username" placeholder="Nom d'utilisateur" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+                </div>
+                <div id="messageContainer">
+                    <p id="errorMessage" style="color: red; display: none;"></p>
+                </div>
+                <button type="submit" class="login-button">Connexion</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Fonction de hachage MD5 définie dans md5.js
+        function doLogin() {
+            var form = document.getElementById('loginForm');
+            var passwordField = document.getElementById('password');
+            var errorMessage = document.getElementById('errorMessage');
+
+            // Remplacez cette logique par la vérification réelle
+            var isLoginSuccessful = false; // Vous devez implémenter la vérification de connexion réelle
+
+            if (!isLoginSuccessful) {
+                errorMessage.innerText = 'Erreur de connexion : Nom d\'utilisateur ou mot de passe incorrect.';
+                errorMessage.style.display = 'block';
+                return false; // Empêche la soumission du formulaire en cas d'erreur
+            }
+
+            // Crypter le mot de passe en MD5
+            var hashedPassword = md5('$(chap-id)' + passwordField.value + '$(chap-challenge)');
+            // Remplacer la valeur du champ mot de passe par le mot de passe crypté
+            passwordField.value = hashedPassword;
+            // Soumettre le formulaire
+            return true; // Permet la soumission du formulaire après le cryptage
+        }
+    </script>
+</body>
+</html>
